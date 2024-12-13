@@ -11,49 +11,51 @@
     <div class="container mt-4">
       <!-- 主标题 -->
       <div class="text-center mb-4">
-        <h1>WaterTrack</h1>
-        <h5>喝水记录与提醒</h5>
-        <p>今日喝水次数：<span id="water-count">0</span></p>
-        <button id="add-water" class="btn btn-primary">记录喝水</button>
+        <h1 id="main-title">WaterTrack</h1>
+        <h5 id="sub-title">喝水记录与提醒</h5>
+
+        <span id="water-count-text"> 今日喝水次数： </span>
+        <span id="water-count">0</span>
+        <p><button id="add-water" class="btn btn-primary">记录喝水</button></p>
       </div>
 
       <!-- 时间范围选择和图表类型选择在一行显示 -->
       <div class="mb-4 d-flex justify-content-between align-items-center">
-        <!-- 显示范围 -->
         <div class="d-flex flex-column" style="flex: 1; margin-right: 10px">
-          <label for="time-range" class="m-0">显示范围：</label>
+          <label for="time-range" class="m-0" id="time-range-label"
+            >显示范围：</label
+          >
           <select id="time-range" class="form-select" style="width: 100%">
-            <option value="7">最近 7 天</option>
-            <option value="30">最近 30 天</option>
-            <option value="all">全部数据</option>
+            <option value="7" id="option-7">最近 7 天</option>
+            <option value="30" id="option-30">最近 30 天</option>
+            <option value="all" id="option-all">全部数据</option>
           </select>
         </div>
 
-        <!-- 图表类型选择 -->
         <div class="d-flex flex-column" style="flex: 1">
-          <label for="chart-type" class="m-0">选择图表类型：</label>
+          <label for="chart-type" class="m-0" id="chart-type-label"
+            >选择图表类型：</label
+          >
           <select id="chart-type" class="form-select" style="width: 100%">
-            <option value="line">折线图</option>
-            <option value="bar">柱状图</option>
-            <option value="pie">饼图</option>
+            <option value="line" id="chart-line">折线图</option>
+            <option value="bar" id="chart-bar">柱状图</option>
+            <option value="pie" id="chart-pie">饼图</option>
           </select>
         </div>
       </div>
 
-      <!-- 图表 -->
       <canvas id="water-chart" width="400" height="200"></canvas>
 
-      <!-- 设置按钮（弹出抽屉） -->
       <button
         class="btn btn-secondary position-fixed bottom-0 end-0 m-4 btn-animate"
         data-bs-toggle="offcanvas"
         data-bs-target="#settings-offcanvas"
         aria-controls="settings-offcanvas"
+        id="settings-btn"
       >
         设置
       </button>
 
-      <!-- 设置抽屉 -->
       <div
         class="offcanvas offcanvas-end"
         tabindex="-1"
@@ -70,7 +72,28 @@
           ></button>
         </div>
         <div class="offcanvas-body">
-          <!-- 折叠面板 -->
+          <!-- 语言选择 -->
+          <div class="mb-4">
+            <label for="language-select" class="m-0" id="language-label"
+              >语言选择：</label
+            >
+            <select
+              id="language-select"
+              class="form-select"
+              style="width: 100%"
+            >
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-HK">繁体中文</option>
+              <option value="en">English</option>
+              <option value="ru">Русский</option>
+              <option value="fr">Français</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+              <option value="es">Español</option>
+              <option value="de">Deutsch</option>
+            </select>
+          </div>
+
           <div class="accordion" id="settingsAccordion">
             <!-- 删除数据 -->
             <div class="accordion-item">
@@ -83,7 +106,7 @@
                   aria-expanded="true"
                   aria-controls="deleteDataPanel"
                 >
-                  删除某天的数据
+                  <span id="delete-data-header">删除某天的数据</span>
                 </button>
               </h2>
               <div
@@ -93,11 +116,13 @@
                 data-bs-parent="#settingsAccordion"
               >
                 <div class="accordion-body">
-                  <p class="text-muted">请选择需要删除数据的日期：</p>
+                  <p class="text-muted" id="delete-date-text">
+                    请选择需要删除数据的日期：
+                  </p>
                   <div class="input-group mb-3">
                     <input type="date" id="delete-date" class="form-control" />
                     <button id="delete-data" class="btn btn-danger ml-2">
-                      删除
+                      <span id="delete-btn">删除</span>
                     </button>
                   </div>
                 </div>
@@ -115,7 +140,7 @@
                   aria-expanded="false"
                   aria-controls="reminderSettingsPanel"
                 >
-                  设置喝水提醒
+                  <span id="reminder-header">设置喝水提醒</span>
                 </button>
               </h2>
               <div
@@ -125,9 +150,14 @@
                 data-bs-parent="#settingsAccordion"
               >
                 <div class="accordion-body">
-                  <p class="text-muted">设置提醒时间和开启提醒功能：</p>
+                  <p class="text-muted" id="reminder-text">
+                    设置提醒时间和开启提醒功能：
+                  </p>
                   <div class="mb-3">
-                    <label for="minutes" class="form-label"
+                    <label
+                      for="minutes"
+                      class="form-label"
+                      id="reminder-time-label"
                       >提醒时间（分钟）：</label
                     >
                     <input
@@ -143,12 +173,15 @@
                       class="form-check-input"
                       id="enableReminder"
                     />
-                    <label class="form-check-label" for="enableReminder"
+                    <label
+                      class="form-check-label"
+                      for="enableReminder"
+                      id="enable-reminder-label"
                       >开启提醒</label
                     >
                   </div>
                   <button id="saveSettings" class="btn btn-success mt-3 w-100">
-                    保存设置
+                    <span id="save-settings-btn">保存设置</span>
                   </button>
                 </div>
               </div>
@@ -165,7 +198,7 @@
                   aria-expanded="false"
                   aria-controls="backupSettingsPanel"
                 >
-                  数据备份导入导出
+                  <span id="backup-header">数据备份导入导出</span>
                 </button>
               </h2>
               <div
@@ -175,17 +208,23 @@
                 data-bs-parent="#settingsAccordion"
               >
                 <div class="accordion-body">
-                  <div class="alert alert-info" role="alert">
+                  <div
+                    id="alert-tips-info-content"
+                    class="alert alert-info"
+                    role="alert"
+                  >
                     仅支持导入喝水数据，不包括设置和配置信息。
                   </div>
-                  <p class="text-muted">备份或恢复您的数据：</p>
+                  <p class="text-muted" id="backup-text">
+                    备份或恢复您的数据：
+                  </p>
                   <div class="mb-3">
                     <button id="export-data" class="btn btn-primary w-100">
-                      导出数据
+                      <span id="export-btn">导出数据</span>
                     </button>
                   </div>
                   <div class="mb-3">
-                    <label for="importFile" class="form-label"
+                    <label for="importFile" class="form-label" id="import-label"
                       >导入数据文件：</label
                     >
                     <input
@@ -196,7 +235,7 @@
                     />
                   </div>
                   <button id="importData" class="btn btn-secondary w-100">
-                    导入数据
+                    <span id="import-btn">导入数据</span>
                   </button>
                 </div>
               </div>
@@ -208,6 +247,7 @@
 
     <script src="chart.min.js"></script>
     <script src="popup.js"></script>
+    <script src="lang.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
   </body>
 </html>
