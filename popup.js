@@ -1,15 +1,20 @@
 //popup.js
 document.addEventListener("DOMContentLoaded", () => {
-    const button = document.getElementById("add-water");
+    const addbutton = document.getElementById("add-water");
     const waterCountDisplay = document.getElementById("water-count");
     const ctx = document.getElementById("water-chart").getContext("2d");
     const deleteButton = document.getElementById("delete-data");
     const deleteDateInput = document.getElementById("delete-date");
     const timeRangeSelect = document.getElementById("time-range");
-
+    const chartTypeSelect = document.getElementById("chart-type");
+    const exportButton = document.getElementById("export-data");
+    const importButton = document.getElementById("importData");
+    const importFileInput = document.getElementById("importFile");
 
     let chart;
     const username = "Admin"; // 默认用户名
+    let currentChartType = "line";  // 初始为折线图
+    let currentTimeRange = "7";  // 初始为最近7天
 
     // 安全存储数据函数
     async function safeSetStorage(key, value) {
@@ -59,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 增加喝水记录
-    button.addEventListener("click", async () => {
+    addbutton.addEventListener("click", async () => {
         const data = await safeGetStorage("waterData");
         const waterData = data || {};
         const today = new Date().toISOString().slice(0, 10);
@@ -77,13 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
         await safeSetStorage("waterData", waterData);
 
         updateWaterCount();
-        updateChart();
+        updateChart(currentTimeRange, currentChartType); // 保持当前时间范围和图表类型
     });
-    // 时间范围选择事件
-    timeRangeSelect.addEventListener("change", async () => {
-        const range = timeRangeSelect.value;
-        updateChart(range);
-    });
+
 
     // 删除某天的数据
     deleteButton.addEventListener("click", async () => {
@@ -107,8 +108,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
+    // 图表类型选择事件
+    chartTypeSelect.addEventListener("change", (event) => {
+        currentChartType = event.target.value;
+        updateChart(currentTimeRange, currentChartType);  // 更新图表，保持时间范围不变
+    });
+
+    // 时间范围选择事件
+    timeRangeSelect.addEventListener("change", (event) => {
+        currentTimeRange = event.target.value;
+        updateChart(currentTimeRange, currentChartType);  // 更新图表，保持图表类型不变
+    });
     // 更新图表
-    async function updateChart(range = "7") {
+    async function updateChart(range = "7", chartType = "line") {
         const data = await safeGetStorage("waterData");
         const waterData = data || {};
 
@@ -137,19 +150,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (chart) {
-            chart.destroy();
+            chart.destroy();  // 销毁现有图表实例
         }
 
-        chart = new Chart(ctx, {
-            type: "line",
+        // 根据图表类型选择不同的图表配置
+        const chartOptions = {
+            type: chartType,
             data: {
                 labels,
                 datasets: [{
                     label: "每日喝水量",
                     data: values,
-                    borderColor: "blue",
-                    backgroundColor: "lightblue",
-                    fill: true,
+                    borderColor: "#007bff", // 更改折线图颜色为蓝色
+                    backgroundColor: "rgba(0, 123, 255, 0.2)", // 更改折线图填充颜色
+                    fill: chartType === "line" || chartType === "bar", // 填充图表区域
                 }],
             },
             options: {
@@ -160,15 +174,45 @@ document.addEventListener("DOMContentLoaded", () => {
                     },
                     y: {
                         title: { display: true, text: "喝水量（杯）" },
-                        min: 0,
-                        max: 10,
-                        ticks: { stepSize: 1, callback: function (value) { return `${value}`; } },
+                        min: 0,  // 最小值
+                        ticks: {
+                            stepSize: 1,  // 设置刻度的步长为1
+                            callback: function (value) {
+                                return `${value}杯`;  // 在每个刻度值后加上单位"杯"
+                            }
+                        },
                     },
                 },
+
             },
-        });
+        };
+
+        // 为柱状图设置特定选项
+        if (chartType === "bar") {
+            chartOptions.data.datasets[0].backgroundColor = "rgba(30, 123, 223, 0.5)";  // 设置柱状图的背景色
+        }
+
+        // 饼图的颜色修复：使用温和的颜色调色板
+        if (chartType === "pie") {
+            chartOptions.type = "pie";
+            chartOptions.data.datasets[0].backgroundColor = [
+                "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F40"
+            ];  // 使用更柔和的颜色调色板
+            chartOptions.options = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                },
+            };
+        }
+
+        // 创建新图表
+        chart = new Chart(ctx, chartOptions);
     }
 
+    // 保存提醒配置
     document.getElementById('saveSettings').addEventListener('click', () => {
         const minutes = parseInt(document.getElementById('minutes').value, 10);
         const enableReminder = document.getElementById('enableReminder').checked;
@@ -195,6 +239,56 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result.reminderInterval !== undefined) {
             document.getElementById('minutes').value = result.reminderInterval;
         }
+    });
+    // 导出数据功能
+    exportButton.addEventListener("click", async () => {
+        const data = await safeGetStorage("waterData");
+        const jsonData = JSON.stringify(data, null, 2); // 格式化 JSON 数据
+
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "water_data.json";
+        a.click();
+
+        URL.revokeObjectURL(url); // 释放 URL
+        alert("数据已导出！");
+    });
+    // 导入数据功能
+    importButton.addEventListener("click", async () => {
+        const file = importFileInput.files[0];
+
+        if (!file) {
+            alert("请选择一个文件！");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            try {
+                const importedData = JSON.parse(event.target.result);
+
+                // 数据格式校验
+                if (
+                    importedData &&
+                    typeof importedData === "object" &&
+                    Array.isArray(importedData.records)
+                ) {
+                    await safeSetStorage("waterData", importedData);
+                    alert("数据已成功导入！");
+                    updateWaterCount();
+                    updateChart();
+                } else {
+                    alert("文件格式不正确，请选择有效的JSON文件！");
+                }
+            } catch (error) {
+                alert("导入数据失败，请检查文件格式！");
+            }
+        };
+
+        reader.readAsText(file);
     });
     initializeData();
 });

@@ -67,6 +67,7 @@ function checkReminder() {
 
 // 每分钟检查一次
 setInterval(() => {
+    console.log(waterReminderMessages[Math.floor(Math.random() * waterReminderMessages.length)]);
     chrome.storage.local.get(['reminderEnabled', 'reminderInterval'], (result) => {
         reminderEnabled = result.reminderEnabled || false;
         reminderInterval = result.reminderInterval || 0;
@@ -82,4 +83,4 @@ setInterval(() => {
             }
         }
     });
-}, 60000);  
+}, 10000);  

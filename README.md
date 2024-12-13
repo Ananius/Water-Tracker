@@ -1,9 +1,25 @@
 # Water Tracker Chrome 扩展插件
 
 这是一个 Chrome 扩展插件，用于帮助您记录每日喝水次数。它会记录您每天喝水的次数，并以图表的形式展示这些数据。您可以查看过去几天的喝水情况、删除某一天的数据，并设置喝水提醒功能。
-![Screenshot 1](assets/screenshot1.png)
-![Screenshot 2](assets/screenshot2.png)
 
+<style>
+.screenshot-container {
+    display: flex;
+    justify-content: space-between; /* 或者使用 space-around, space-evenly 根据需要调整 */
+    align-items: center;
+}
+
+.screenshot-container img {
+    max-width: 45%; /* 每张图片最大宽度为容器宽度的 45% */
+    height: auto; /* 保持图片的宽高比 */
+    margin: 10px; /* 图片之间的间距 */
+}
+</style>
+
+<div class="screenshot-container">
+    <img src="assets/screenshot1.png" alt="Screenshot 1">
+    <img src="assets/screenshot2.png" alt="Screenshot 2">
+</div>
 ## 功能
 
 - **记录喝水次数**：点击“记录喝水”按钮来记录每天的喝水次数。
