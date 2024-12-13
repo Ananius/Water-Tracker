@@ -1,3 +1,4 @@
+//popup.js
 document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("add-water");
     const waterCountDisplay = document.getElementById("water-count");
@@ -6,8 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const deleteDateInput = document.getElementById("delete-date");
     const timeRangeSelect = document.getElementById("time-range");
 
-    let chart; // 用于存储图表实例
-    const username = "Admin"; // 使用 Admin 作为默认用户名
+
+    let chart;
+    const username = "Admin"; // 默认用户名
 
     // 安全存储数据函数
     async function safeSetStorage(key, value) {
@@ -36,12 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await safeGetStorage("waterData");
         if (!data) {
             const initialData = {
-                username: 'Admin', // 默认用户名
+                username, // 默认用户名
                 records: [], // 初始化 records 数组
             };
             await safeSetStorage("waterData", initialData);
         }
-
         updateWaterCount();
         updateChart();
     }
@@ -73,16 +74,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 增加当天的喝水次数
         recordForToday.count += 1;
-
         await safeSetStorage("waterData", waterData);
 
         updateWaterCount();
         updateChart();
     });
+    // 时间范围选择事件
+    timeRangeSelect.addEventListener("change", async () => {
+        const range = timeRangeSelect.value;
+        updateChart(range);
+    });
 
     // 删除某天的数据
     deleteButton.addEventListener("click", async () => {
-        const date = deleteDateInput.value; // 获取用户输入的日期
+        const date = deleteDateInput.value;
         if (!date) {
             alert("请选择日期！");
             return;
@@ -91,15 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await safeGetStorage("waterData");
         const waterData = data || {};
 
-        // 删除指定日期的数据
         const index = waterData.records.findIndex(record => record.date === date);
         if (index !== -1) {
             waterData.records.splice(index, 1);
             await safeSetStorage("waterData", waterData);
-
-            console.log(`已删除 ${date} 的数据`);
             alert(`已删除 ${date} 的数据`);
-            updateChart(); // 更新图表
+            updateChart();
         } else {
             alert(`未找到 ${date} 的数据！`);
         }
@@ -110,92 +112,89 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await safeGetStorage("waterData");
         const waterData = data || {};
 
-        // 获取今天日期
         const today = new Date();
         let labels = [];
         let values = [];
 
-        // 如果选择的是 "全部数据"
         if (range === "all") {
-            // 获取所有日期
             labels = waterData.records.map(record => record.date);
             values = labels.map((date) => {
                 const record = waterData.records.find(r => r.date === date);
                 return record ? record.count : 0;
             });
         } else {
-            // 否则，生成最近 N 天的日期列表
             const days = parseInt(range, 10);
             labels = Array.from({ length: days }).map((_, i) => {
                 const date = new Date(today);
-                date.setDate(today.getDate() - (days - 1) + i); // 最近 N 天
-                return date.toISOString().slice(0, 10); // 格式化为 YYYY-MM-DD
+                date.setDate(today.getDate() - (days - 1) + i);
+                return date.toISOString().slice(0, 10);
             });
 
-            // 按日期获取对应的喝水次数，没有记录的日期设为 0
             values = labels.map((day) => {
                 const record = waterData.records.find(r => r.date === day);
                 return record ? record.count : 0;
             });
         }
 
-        // 销毁旧图表以避免多实例
         if (chart) {
             chart.destroy();
         }
 
-        // 创建新图表
         chart = new Chart(ctx, {
             type: "line",
             data: {
-                labels, // X 轴显示的日期
-                datasets: [
-                    {
-                        label: "每日喝水量",
-                        data: values, // Y 轴显示的喝水次数
-                        borderColor: "blue",
-                        backgroundColor: "lightblue",
-                        fill: true,
-                    },
-                ],
+                labels,
+                datasets: [{
+                    label: "每日喝水量",
+                    data: values,
+                    borderColor: "blue",
+                    backgroundColor: "lightblue",
+                    fill: true,
+                }],
             },
             options: {
                 responsive: true,
-                plugins: {
-                    legend: { display: true }, // 显示图例
-                    tooltip: { enabled: true }, // 启用悬浮提示
-                },
                 scales: {
                     x: {
-                        title: {
-                            display: true,
-                            text: "时间（日期）", // X 轴标题
-                        },
+                        title: { display: true, text: "时间（日期）" },
                     },
                     y: {
-                        title: {
-                            display: true,
-                            text: "喝水量（杯）", // Y 轴标题
-                        },
-                        min: 0, // 最小值为 0
-                        max: 10, // 最大值为 10
-                        ticks: {
-                            stepSize: 1, // 每次刻度增加 1
-                            callback: function (value) {
-                                return `${value}`; // Y 轴显示 0 到 10
-                            },
-                        },
+                        title: { display: true, text: "喝水量（杯）" },
+                        min: 0,
+                        max: 10,
+                        ticks: { stepSize: 1, callback: function (value) { return `${value}`; } },
                     },
                 },
             },
         });
     }
 
-    // 时间范围选择事件
-    timeRangeSelect.addEventListener("change", async () => {
-        const range = timeRangeSelect.value;
-        updateChart(range);
+    document.getElementById('saveSettings').addEventListener('click', () => {
+        const minutes = parseInt(document.getElementById('minutes').value, 10);
+        const enableReminder = document.getElementById('enableReminder').checked;
+
+        // 输入验证：确保分钟数是一个正整数
+        if (isNaN(minutes) || minutes <= 0) {
+            alert("请输入一个有效的正整数作为提醒间隔！");
+            return;
+        }
+
+        // 存储设置到 chrome.storage
+        chrome.storage.local.set({ reminderEnabled: enableReminder, reminderInterval: minutes }, () => {
+            // 提示保存成功
+            alert("设置已保存！");
+        });
     });
 
+    // 页面加载时，读取存储的设置并应用到页面
+    chrome.storage.local.get(['reminderEnabled', 'reminderInterval'], (result) => {
+        // 确保从存储中获取的值不是 undefined
+        if (result.reminderEnabled !== undefined) {
+            document.getElementById('enableReminder').checked = result.reminderEnabled;
+        }
+        if (result.reminderInterval !== undefined) {
+            document.getElementById('minutes').value = result.reminderInterval;
+        }
+    });
     initializeData();
 });

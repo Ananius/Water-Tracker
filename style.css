@@ -1,21 +1,25 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+  /* 为图表和设置抽屉之间提供足够的空间 */
+  #water-chart {
+    margin-bottom: 60px; /* 留出底部空间给设置抽屉 */
   }
-  
-  .container {
-    padding: 20px;
+
+  /* 设置按钮点击时的动画效果 */
+  .btn-animate {
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+
+  .btn-animate:active {
+    transform: scale(0.95); /* 点击时缩小按钮 */
+    opacity: 0.7; /* 点击时轻微透明 */
   }
-  
-  #chart {
-    margin-top: 20px;
+
+  /* 设置抽屉展开时的过渡效果 */
+  .offcanvas {
+    transition: transform 0.5s ease-in-out;
   }
-  
+  .offcanvas-end {
+    transform: translateX(100%); /* 默认在屏幕外 */
+  }
+  .offcanvas.show {
+    transform: translateX(0); /* 展开时移入屏幕 */
+  }

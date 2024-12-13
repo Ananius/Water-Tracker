@@ -3,7 +3,7 @@
   "name": "Water Tracker",
   "version": "1.0",
   "description": "记录每天喝水次数并展示统计数据。",
-  "permissions": ["storage"],
+  "permissions": ["notifications", "storage"],
   "host_permissions": [],
   "action": {
     "default_popup": "popup.html",
@@ -12,6 +12,9 @@
       "48": "icon.png",
       "128": "icon.png"
     }
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "web_accessible_resources": [
     {

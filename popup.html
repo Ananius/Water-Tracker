@@ -3,35 +3,105 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Water Tracker</title>
+    <title>喝水记录</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="bootstrap.min.css" />
   </head>
   <body>
-    <div class="container">
-      <div>
+    <div class="container mt-4">
+      <!-- 主标题 -->
+      <div class="text-center mb-4">
         <h1>喝水记录</h1>
         <p>今日喝水次数：<span id="water-count">0</span></p>
-        <button id="add-water">记录喝水</button>
+        <button id="add-water" class="btn btn-primary">记录喝水</button>
       </div>
 
-      <div>
-        <p>删除某天的数据：</p>
-        <input type="date" id="delete-date" />
-        <button id="delete-data">删除</button>
-      </div>
-
-      <div>
+      <!-- 时间范围选择 -->
+      <div class="mb-4">
         <p>显示范围：</p>
-        <select id="time-range">
+        <select id="time-range" class="form-select">
           <option value="7">最近 7 天</option>
           <option value="30">最近 30 天</option>
           <option value="all">全部数据</option>
         </select>
       </div>
 
+      <!-- 图表 -->
       <canvas id="water-chart" width="400" height="200"></canvas>
+
+      <!-- 设置按钮（弹出抽屉） -->
+      <button
+        class="btn btn-secondary position-fixed bottom-0 end-0 m-4 btn-animate"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#settings-offcanvas"
+        aria-controls="settings-offcanvas"
+      >
+        设置
+      </button>
+
+      <!-- 设置抽屉 -->
+      <div
+        class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="settings-offcanvas"
+        aria-labelledby="settings-offcanvasLabel"
+      >
+        <div class="offcanvas-header">
+          <h5 id="settings-offcanvasLabel">设置</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <!-- 删除数据 -->
+          <div class="mb-5">
+            <h4 class="text-primary font-weight-bold">删除某天的数据</h4>
+            <p class="text-muted">请选择需要删除数据的日期：</p>
+            <div class="input-group mb-3">
+              <input type="date" id="delete-date" class="form-control" />
+              <button id="delete-data" class="btn btn-danger ml-2">删除</button>
+            </div>
+          </div>
+
+          <!-- 设置提醒 -->
+          <div class="mb-5">
+            <h4 class="text-primary font-weight-bold">设置喝水提醒</h4>
+            <p class="text-muted">设置提醒时间和开启提醒功能：</p>
+
+            <div class="mb-3">
+              <label for="minutes" class="form-label">提醒时间（分钟）：</label>
+              <input
+                type="number"
+                id="minutes"
+                class="form-control"
+                placeholder="例如：60"
+              />
+            </div>
+
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="enableReminder"
+              />
+              <label class="form-check-label" for="enableReminder"
+                >开启提醒</label
+              >
+            </div>
+
+            <button id="saveSettings" class="btn btn-success mt-3 w-100">
+              保存设置
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
     <script src="chart.min.js"></script>
     <script src="popup.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
   </body>
 </html>
