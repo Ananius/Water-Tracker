@@ -36,23 +36,37 @@
 
 ```json
 {
-  "waterData": {
-    "username": "Admin",
-    "records": [
-      {
-        "date": "YYYY-MM-DD",
-        "count": 5
-      },
-      {
-        "date": "YYYY-MM-DD",
-        "count": 3
-      }
-    ],
-    "reminder": {
-      "enabled": true,
-      "interval": 60
+  "records": [
+    {
+      "count": 1,
+      "date": "2024-12-07"
+    },
+    {
+      "count": 2,
+      "date": "2024-12-08"
+    },
+    {
+      "count": 3,
+      "date": "2024-12-09"
+    },
+    {
+      "count": 4,
+      "date": "2024-12-10"
+    },
+    {
+      "count": 6,
+      "date": "2024-12-11"
+    },
+    {
+      "count": 7,
+      "date": "2024-12-12"
+    },
+    {
+      "count": 2,
+      "date": "2024-12-13"
     }
-  }
+  ],
+  "username": "Admin"
 }
 ```
 
