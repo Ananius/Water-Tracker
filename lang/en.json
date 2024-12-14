@@ -12,6 +12,7 @@
   "chart-bar": "Bar Chart",
   "chart-pie": "Pie Chart",
   "settings-btn": "Settings",
+  "settings-offcanvasLabel": "Settings",
   "language-label": "Language Selection:",
   "delete-data-header": "Delete Data for a Specific Day",
   "delete-date-text": "Please select the date for which you want to delete data:",
@@ -26,5 +27,10 @@
   "backup-text": "Backup or Restore Your Data:",
   "export-btn": "Export Data",
   "import-label": "Import Data File:",
-  "import-btn": "Import Data"
+  "import-btn": "Import Data",
+  "theme-header": "Theme Color Settings",
+  "theme-text": "Select your preferred theme color:",
+  "light-theme-text": "Light Theme",
+  "dark-theme-text": "Dark Theme",
+  "auto-theme-text": "Auto Theme"
 }

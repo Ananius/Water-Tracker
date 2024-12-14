@@ -170,15 +170,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 responsive: true,
                 scales: {
                     x: {
-                        title: { display: true, text: "时间（日期）" },
+                        // title: { display: true, text: "时间（日期）" },
                     },
                     y: {
-                        title: { display: true, text: "喝水量（杯）" },
+                        // title: { display: true, text: "喝水量（杯）" },
                         min: 0,  // 最小值
                         ticks: {
                             stepSize: 1,  // 设置刻度的步长为1
                             callback: function (value) {
-                                return `${value}杯`;  // 在每个刻度值后加上单位"杯"
+                                return `${value}`;  // 在每个刻度值后加上单位"杯"
                             }
                         },
                     },

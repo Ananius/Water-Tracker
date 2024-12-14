@@ -187,6 +187,86 @@
               </div>
             </div>
 
+            <!-- 主题色切换 -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="themeSettingsHeader">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#themeSettingsPanel"
+                  aria-expanded="false"
+                  aria-controls="themeSettingsPanel"
+                >
+                  <span id="theme-header">主题色设置</span>
+                </button>
+              </h2>
+              <div
+                id="themeSettingsPanel"
+                class="accordion-collapse collapse"
+                aria-labelledby="themeSettingsHeader"
+                data-bs-parent="#settingsAccordion"
+              >
+                <div class="accordion-body">
+                  <p class="text-muted" id="theme-text">
+                    选择您喜欢的主题颜色：
+                  </p>
+                  <div class="d-flex justify-content-between">
+                    <!-- 白色主题单选框 -->
+                    <div>
+                      <input
+                        type="radio"
+                        id="light-theme"
+                        name="theme"
+                        value="light"
+                        class="form-check-input"
+                      />
+                      <label
+                        for="light-theme"
+                        id="light-theme-text"
+                        class="form-check-label"
+                        >白色主题</label
+                      >
+                    </div>
+
+                    <!-- 黑色主题单选框 -->
+                    <div>
+                      <input
+                        type="radio"
+                        id="dark-theme"
+                        name="theme"
+                        value="dark"
+                        class="form-check-input"
+                      />
+                      <label
+                        for="dark-theme"
+                        id="dark-theme-text"
+                        class="form-check-label"
+                        >黑色主题</label
+                      >
+                    </div>
+
+                    <!-- 自动主题单选框 -->
+                    <div>
+                      <input
+                        type="radio"
+                        id="auto-theme"
+                        name="theme"
+                        value="auto"
+                        class="form-check-input"
+                      />
+                      <label
+                        for="auto-theme"
+                        id="auto-theme-text"
+                        class="form-check-label"
+                        >自动主题</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- 数据备份导入导出 -->
             <div class="accordion-item">
               <h2 class="accordion-header" id="backupSettingsHeader">
@@ -240,6 +320,8 @@
                 </div>
               </div>
             </div>
+
+            <!--  -->
           </div>
         </div>
       </div>
@@ -249,5 +331,6 @@
     <script src="popup.js"></script>
     <script src="lang.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
+    <script src="theme-switcher.js"></script>
   </body>
 </html>

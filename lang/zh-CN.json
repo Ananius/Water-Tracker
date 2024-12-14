@@ -12,6 +12,7 @@
   "chart-bar": "柱状图",
   "chart-pie": "饼图",
   "settings-btn": "设置",
+  "settings-offcanvasLabel": "设置",
   "language-label": "语言选择：",
   "delete-data-header": "删除某天的数据",
   "delete-date-text": "请选择需要删除数据的日期：",
@@ -26,5 +27,10 @@
   "backup-text": "备份或恢复您的数据：",
   "export-btn": "导出数据",
   "import-label": "导入数据文件：",
-  "import-btn": "导入数据"
+  "import-btn": "导入数据",
+  "theme-header": "主题色设置",
+  "theme-text": "选择您喜欢的主题颜色：",
+  "light-theme-text": "白色主题",
+  "dark-theme-text": "黑色主题",
+  "auto-theme-text": "自动主题"
 }
