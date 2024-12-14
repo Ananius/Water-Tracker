@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "WaterTrack - 喝水记录与提醒",
-  "version": "1.0",
+  "version": "1.1",
   "description": "WaterTrack 是一款 Chrome 扩展，帮助您记录每日喝水次数并展示可视化图表，助力养成健康饮水习惯。支持定时提醒、查看近期数据及历史记录，帮助您精准管理喝水习惯。",
   "permissions": ["notifications", "storage"],
   "host_permissions": [],
